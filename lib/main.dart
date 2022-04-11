@@ -40,10 +40,10 @@ class _DemoAppState extends State<DemoApp> {
 
   Color bgColor = Colors.purple;
 
+  ValueNotifier<Color> colorNotifier = ValueNotifier(Colors.purple);
+
   changeColor(int index) {
-    setState(() {
-      bgColor = colors[index];
-    });
+    colorNotifier.value = colors[index];
   }
 
   Widget _buildItemList(BuildContext context, int index) {
@@ -113,13 +113,21 @@ class _DemoAppState extends State<DemoApp> {
             ),
           ),
           Expanded(
-            child: Container(
-              width: double.maxFinite,
-              alignment: Alignment.center,
-              color: bgColor,
-              child: const Text('Calendar List'),
-            ),
-          )
+              child: ValueListenableBuilder(
+            valueListenable: colorNotifier,
+            builder: (context, value, child) {
+              return Container(
+                width: double.maxFinite,
+                alignment: Alignment.center,
+                color: colorNotifier.value,
+                child: GestureDetector(
+                  onDoubleTap: (){
+                    colorNotifier.value = colors[2];
+                  },
+                    child: const Text('Calendar List')),
+              );
+            },
+          ))
         ],
       ),
     );
